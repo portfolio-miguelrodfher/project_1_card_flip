@@ -1,3 +1,4 @@
+
 /* General styles */
 * {
     margin: 0;
@@ -114,24 +115,41 @@ body {
     background-color: #e0a806;
 }
 
-/* Game container for the cards - HIDE by default */
-.game-container {
-    display: none; /* Hidden initially */
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    gap: 15px;
-    width: 100%;
-    max-width: 600px;
-    margin-top: 20px;
+
+/* Main Game Container */
+.main-game-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+    position: relative;
+    padding: 20px;
 }
 
-/* Cards for the game */
-.card {
-    width: 100%;
-    height: 0;
-    padding-bottom: 150%; /* Aspect ratio to ensure cards are responsive */
-    position: relative;
-    perspective: 1000px;
+/* Game container for the cards */
+.game-container {
+    display: grid;
+    gap: 15px;  /* Space between cards */
+    justify-content: center;  /* Center the grid items horizontally */
+    align-items: center;  /* Center the grid items vertically */
+    max-width: 90vw;  /* Limit width to viewport width for a responsive layout */
+    max-height: 90vh;  /* Limit height to viewport height */
+    margin: auto;
+    padding: 10px;
+    border-radius: 10px;
+    background-color: #f0f0f0;
 }
+
+
+/* Adjust card size to ensure symmetry */
+.card {
+    width: 120px;
+    height: 180px;
+    transition: transform 0.2s ease;  /* Adding a bit of animation when flipping */
+}
+
 
 .card-front, .card-back {
     width: 100%;

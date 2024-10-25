@@ -12,37 +12,41 @@
 </head>
 
 <body>
-    <!-- Background tiles -->
-    <div class="background-tiles"></div>
-    
-    <!-- Dark overlay over tiles to enhance text visibility -->
-    <div class="overlay"></div>
-    
-    <!-- Container for Intro Screen -->
-    <div class="intro-container">
-        <div class="intro-screen" id="intro-screen">
-            <h1>Welcome to Andy's Memory Bash</h1>
-            <button id="start-button">Start Game</button>
-        </div>
-    </div>
-    
-    <!-- Game Container -->
-    <div class="game-container"></div>
-
-    <!-- Modal for question -->
-    <div class="modal hidden" id="question-popup">
-        <div class="modal-content">
-            <p id="question-text"></p>
-            <div class="options">
-                <button class="option-btn" id="option-1">Option 1</button>
-                <button class="option-btn" id="option-2">Option 2</button>
-                <button class="option-btn" id="option-3">Option 3</button>
+    <!-- Main Game Container to handle all game elements -->
+    <div class="main-game-container">
+        <!-- Background tiles -->
+        <div class="background-tiles"></div>
+        
+        <!-- Dark overlay over tiles to enhance text visibility -->
+        <div class="overlay"></div>
+        
+        <!-- Container for Intro Screen -->
+        <div class="intro-container">
+            <div class="intro-screen" id="intro-screen">
+                <h1>Welcome to Andy's Memory Bash</h1>
+                <button id="start-button">Start Game</button>
             </div>
-            <p id="timer">Time left: <span id="time-left">10</span></p>
+        </div>
+        
+        <!-- Game Container -->
+        <div class="game-container"></div>
+        
+        <!-- Modal for question -->
+        <div class="modal hidden" id="question-popup">
+            <div class="modal-content">
+                <p id="question-text"></p>
+                <div class="options">
+                    <button class="option-btn" id="option-1">Option 1</button>
+                    <button class="option-btn" id="option-2">Option 2</button>
+                    <button class="option-btn" id="option-3">Option 3</button>
+                </div>
+                <p id="timer">Time left: <span id="time-left">10</span></p>
+            </div>
         </div>
     </div>
 
     <script src="script.js"></script>
 </body>
+
 
 </html>

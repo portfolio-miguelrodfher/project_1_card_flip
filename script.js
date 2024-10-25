@@ -14,6 +14,22 @@ const introContainer = document.querySelector('.intro-container');
 const tileContainer = document.querySelector('.background-tiles');
 const overlay = document.querySelector('.overlay');
 
+// Load sound effects
+const startGameSound = new Audio('sounds/start_game.wav');
+const flipCardSound = new Audio('sounds/flipcard.wav');
+const levelUpSound = new Audio('sounds/level_up.mp3');
+const questionTimeSound = new Audio('sounds/question_time.wav');
+const gameOverSound = new Audio('sounds/game_over.wav');
+
+// Preload audio files to avoid playback delay
+startGameSound.load();
+flipCardSound.load();
+levelUpSound.load();
+questionTimeSound.load();
+gameOverSound.load();
+
+
+
 let flippedCards = [];
 let missedTries = 0;  // Keep track of missed tries
 let level = 1;
@@ -24,6 +40,15 @@ let maxLevels = 15; // Total number of levels until the screen is fully covered
 
 // Predefine the number of cards for each level to ensure symmetry
 const levelCardCounts = [8, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60, 64];
+
+
+// Helper function to append message elements only if they are not already in the DOM
+function appendMessageIfNeeded(element) {
+    if (!document.body.contains(element)) {
+        document.body.appendChild(element);
+    }
+}
+
 
 // Function to create a grid of tiles and animate them
 function createTileGrid() {
@@ -112,6 +137,8 @@ gsap.from(".intro-screen h1 span", {
 startButton.addEventListener('click', startGame);
 
 function startGame() {
+    // Play the start game sound
+    startGameSound.play();
     // Hide the intro screen, overlays, and tile background
     introContainer.style.display = 'none';
     introScreen.style.display = 'none';
@@ -126,40 +153,131 @@ function startGame() {
 // Function to set up the current level with a specified number of cards
 function setupLevel() {
     console.log(`Setting up level ${level}`);
+    cardContainer.innerHTML = ''; // Clear previous level cards
+
     const numCards = levelCardCounts[level - 1]; // Get the number of cards for the current level
-    cardContainer.innerHTML = ''; // Clear previous level
-
     const totalPairs = numCards / 2;
-    let cardValues = [];
+    let cardValues = [];  // Reset card values for each new level
 
+    // Generate card values based on the current level
     if (level === 1) {
-        // Use numbers for level 1
+        // Level 1: Numbers
         for (let i = 0; i < totalPairs; i++) {
-            cardValues.push(i, i); // Push two of each number for matching pairs
+            cardValues.push(i, i);
+        }
+    } else if (level === 2) {
+        // Level 2: Images
+        for (let i = 0; i < totalPairs; i++) {
+            cardValues.push(`https://picsum.photos/200?random=${i}`, `https://picsum.photos/200?random=${i}`);
+        }
+    } else if (level === 3) {
+        // Level 3: Emojis
+        const emojis = ["🐶", "🐱", "🦊", "🐻", "🐼", "🦁", "🐯", "🐨", "🐸", "🦄"];
+        for (let i = 0; i < totalPairs; i++) {
+            cardValues.push(emojis[i % emojis.length], emojis[i % emojis.length]);
+        }
+    } else if (level === 4) {
+        // Level 4: Colors
+        const colors = ["#FF5733", "#33FF57", "#3357FF", "#FF33A1", "#FFC300", "#8E44AD", "#16A085", "#E74C3C"];
+        for (let i = 0; i < totalPairs; i++) {
+            cardValues.push(colors[i % colors.length], colors[i % colors.length]);
+        }
+    } else if (level === 5) {
+        // Level 5: Math Problems and Solutions
+        for (let i = 0; i < totalPairs; i++) {
+            const num1 = Math.floor(Math.random() * 10) + 1;
+            const num2 = Math.floor(Math.random() * 10) + 1;
+            const problem = `${num1} + ${num2}`;
+            const solution = num1 + num2;
+            cardValues.push(problem, solution);
+        }
+    } else if (level === 6) {
+        // Level 6: Animal Sounds
+        const animals = [
+            { image: "🐱", sound: "Meow" },
+            { image: "🐶", sound: "Woof" },
+            { image: "🐮", sound: "Moo" },
+            { image: "🐸", sound: "Ribbit" },
+            { image: "🦆", sound: "Quack" },
+            { image: "🐑", sound: "Baa" }
+        ];
+        for (let i = 0; i < totalPairs; i++) {
+            const { image, sound } = animals[i % animals.length];
+            cardValues.push(image, sound);
+        }
+    } else if (level === 7) {
+        // Level 7: Flags and Country Names
+        const countries = [
+            { flag: "🇺🇸", name: "United States" },
+            { flag: "🇬🇧", name: "United Kingdom" },
+            { flag: "🇨🇦", name: "Canada" },
+            { flag: "🇯🇵", name: "Japan" },
+            { flag: "🇫🇷", name: "France" },
+            { flag: "🇩🇪", name: "Germany" }
+        ];
+        for (let i = 0; i < totalPairs; i++) {
+            const { flag, name } = countries[i % countries.length];
+            cardValues.push(flag, name);
+        }
+    } else if (level === 8) {
+        // Level 8: Icon and Object Pairs (Famous Characters)
+        const icons = [
+            { icon: "⚡", character: "Harry Potter" },
+            { icon: "🛡️", character: "Captain America" },
+            { icon: "🦇", character: "Batman" },
+            { icon: "🌊", character: "Aquaman" },
+            { icon: "💍", character: "Frodo Baggins" },
+            { icon: "🕷️", character: "Spider-Man" }
+        ];
+        for (let i = 0; i < totalPairs; i++) {
+            const { icon, character } = icons[i % icons.length];
+            cardValues.push(icon, character);
+        }
+    } else if (level === 9) {
+        // Level 9: Memory Sounds (Audio Clips)
+        const sounds = [
+            { sound: "bell.mp3", label: "🔔 Bell" },
+            { sound: "dog_bark.mp3", label: "🐶 Dog Bark" },
+            { sound: "cat_meow.mp3", label: "🐱 Cat Meow" },
+            { sound: "car_horn.mp3", label: "🚗 Car Horn" },
+            { sound: "laugh.mp3", label: "😂 Laugh" }
+        ];
+        for (let i = 0; i < totalPairs; i++) {
+            const { sound, label } = sounds[i % sounds.length];
+            cardValues.push(`sound:${sound}`, label);
         }
     } else {
-        // Use images for levels 2 and beyond
+        // Default to Images for levels beyond 9
         for (let i = 0; i < totalPairs; i++) {
-            cardValues.push(`https://picsum.photos/200?random=${i}`, `https://picsum.photos/200?random=${i}`); // Push two of each image for matching pairs
+            cardValues.push(`https://picsum.photos/200?random=${i + 20}`, `https://picsum.photos/200?random=${i + 20}`);
         }
     }
 
     // Shuffle the cards
     cardValues = cardValues.sort(() => Math.random() - 0.5);
 
-    // Create the card elements
+    // Create the card elements and add them to the game container
     cardValues.forEach((value, index) => {
         const card = document.createElement('div');
         card.classList.add('card');
 
-        if (level === 1) {
-            // For level 1, display numbers on the card-back
-            card.innerHTML = `<div class="card-front">🤔</div><div class="card-back">${value}</div>`;
-        } else {
-            // For levels 2 and beyond, display images on the card-back
+        // Determine the card-back content based on the value type
+        if (typeof value === "string" && value.startsWith("https")) {
+            // Handle image URLs
             card.innerHTML = `<div class="card-front">🤔</div><div class="card-back" style="background-image: url('${value}'); background-size: cover;"></div>`;
+        } else if (typeof value === "string" && value.startsWith("#")) {
+            // Handle color blocks for Level 4
+            card.innerHTML = `<div class="card-front">🤔</div><div class="card-back" style="background-color: ${value};"></div>`;
+        } else if (typeof value === "string" && value.startsWith("sound:")) {
+            // Handle audio files for Level 9
+            const soundFile = value.split(":")[1];
+            card.innerHTML = `<div class="card-front">🤔</div><div class="card-back"><audio src="${soundFile}" controls></audio></div>`;
+        } else {
+            // Handle all other content (numbers, emojis, text)
+            card.innerHTML = `<div class="card-front">🤔</div><div class="card-back">${value}</div>`;
         }
 
+        // Add click event to flip the card
         card.addEventListener('click', () => flipCard(card, value));
         cardContainer.appendChild(card);
     });
@@ -167,9 +285,171 @@ function setupLevel() {
     // Update the grid layout and card size
     updateGridAndCardSize(numCards);
 
-    // Call the domino effect animation after setting up the level
+    // Animate the cards appearing with a domino effect
     dominoAppear();
 }
+
+// Function to set up the current level with a specified number of cards
+function setupLevel() {
+    console.log(`Setting up level ${level}`);
+    cardContainer.innerHTML = ''; // Clear previous level cards
+
+    const numCards = levelCardCounts[level - 1]; // Get the number of cards for the current level
+    const totalPairs = numCards / 2;
+    let cardValues = [];  // Reset card values for each new level
+
+    // Generate card values based on the current level
+    if (level === 1) {
+        // Level 1: Numbers
+        for (let i = 0; i < totalPairs; i++) {
+            cardValues.push(i, i);
+        }
+    } else if (level === 2) {
+        // Level 2: Images
+        for (let i = 0; i < totalPairs; i++) {
+            cardValues.push(`https://picsum.photos/200?random=${i}`, `https://picsum.photos/200?random=${i}`);
+        }
+    } else if (level === 3) {
+        // Level 3: Emojis
+        const emojis = ["🐶", "🐱", "🦊", "🐻", "🐼", "🦁", "🐯", "🐨", "🐸", "🦄"];
+        for (let i = 0; i < totalPairs; i++) {
+            cardValues.push(emojis[i % emojis.length], emojis[i % emojis.length]);
+        }
+    } else if (level === 4) {
+        // Level 4: Colors
+        const colors = ["#FF5733", "#33FF57", "#3357FF", "#FF33A1", "#FFC300", "#8E44AD", "#16A085", "#E74C3C"];
+        for (let i = 0; i < totalPairs; i++) {
+            cardValues.push(colors[i % colors.length], colors[i % colors.length]);
+        }
+    } else if (level === 5) {
+        // Level 5: Math Problems and Solutions
+        for (let i = 0; i < totalPairs; i++) {
+            const num1 = Math.floor(Math.random() * 10) + 1;
+            const num2 = Math.floor(Math.random() * 10) + 1;
+            const problem = `${num1} + ${num2}`;
+            const solution = num1 + num2;
+            cardValues.push(problem, solution);
+        }
+    } else if (level === 6) {
+        // Level 6: Animal Sounds
+        const animals = [
+            { image: "🐱", sound: "Meow" },
+            { image: "🐶", sound: "Woof" },
+            { image: "🐮", sound: "Moo" },
+            { image: "🐸", sound: "Ribbit" },
+            { image: "🦆", sound: "Quack" },
+            { image: "🐑", sound: "Baa" }
+        ];
+        for (let i = 0; i < totalPairs; i++) {
+            const { image, sound } = animals[i % animals.length];
+            cardValues.push(image, sound);
+        }
+    } else if (level === 7) {
+        // Level 7: Flags and Country Names
+        const countries = [
+            { flag: "🇺🇸", name: "United States" },
+            { flag: "🇬🇧", name: "United Kingdom" },
+            { flag: "🇨🇦", name: "Canada" },
+            { flag: "🇯🇵", name: "Japan" },
+            { flag: "🇫🇷", name: "France" },
+            { flag: "🇩🇪", name: "Germany" }
+        ];
+        for (let i = 0; i < totalPairs; i++) {
+            const { flag, name } = countries[i % countries.length];
+            cardValues.push(flag, name);
+        }
+    } else if (level === 8) {
+        // Level 8: Icon and Object Pairs (Famous Characters)
+        const icons = [
+            { icon: "⚡", character: "Harry Potter" },
+            { icon: "🛡️", character: "Captain America" },
+            { icon: "🦇", character: "Batman" },
+            { icon: "🌊", character: "Aquaman" },
+            { icon: "💍", character: "Frodo Baggins" },
+            { icon: "🕷️", character: "Spider-Man" }
+        ];
+        for (let i = 0; i < totalPairs; i++) {
+            const { icon, character } = icons[i % icons.length];
+            cardValues.push(icon, character);
+        }
+    } else if (level === 9) {
+        // Level 9: Memory Sounds (Audio Clips)
+        const sounds = [
+            { sound: "bell.mp3", label: "🔔 Bell" },
+            { sound: "dog_bark.mp3", label: "🐶 Dog Bark" },
+            { sound: "cat_meow.mp3", label: "🐱 Cat Meow" },
+            { sound: "car_horn.mp3", label: "🚗 Car Horn" },
+            { sound: "laugh.mp3", label: "😂 Laugh" }
+        ];
+        for (let i = 0; i < totalPairs; i++) {
+            const { sound, label } = sounds[i % sounds.length];
+            cardValues.push(`sound:${sound}`, label);
+        }
+    } else {
+        // Default to Images for levels beyond 9
+        for (let i = 0; i < totalPairs; i++) {
+            cardValues.push(`https://picsum.photos/200?random=${i + 20}`, `https://picsum.photos/200?random=${i + 20}`);
+        }
+    }
+
+    // Shuffle the cards
+    cardValues = cardValues.sort(() => Math.random() - 0.5);
+
+    // Create the card elements and add them to the game container
+    cardValues.forEach((value, index) => {
+        const card = document.createElement('div');
+        card.classList.add('card');
+
+        // Determine the card-back content based on the value type
+        if (typeof value === "string" && value.startsWith("https")) {
+            // Handle image URLs
+            card.innerHTML = `<div class="card-front">🤔</div><div class="card-back" style="background-image: url('${value}'); background-size: cover;"></div>`;
+        } else if (typeof value === "string" && value.startsWith("#")) {
+            // Handle color blocks for Level 4
+            card.innerHTML = `<div class="card-front">🤔</div><div class="card-back" style="background-color: ${value};"></div>`;
+        } else if (typeof value === "string" && value.startsWith("sound:")) {
+            // Handle audio files for Level 9
+            const soundFile = value.split(":")[1];
+            card.innerHTML = `<div class="card-front">🤔</div><div class="card-back"><audio src="${soundFile}" controls></audio></div>`;
+        } else {
+            // Handle all other content (numbers, emojis, text)
+            card.innerHTML = `<div class="card-front">🤔</div><div class="card-back">${value}</div>`;
+        }
+
+        // Add click event to flip the card
+        card.addEventListener('click', () => flipCard(card, value));
+        cardContainer.appendChild(card);
+    });
+
+    // Update the grid layout and card size
+    updateGridAndCardSize(numCards);
+
+    // Animate the cards appearing with a domino effect
+    dominoAppear();
+}
+
+
+
+
+
+function ensureSymmetricalCardCount(cards, columns) {
+    const remainder = cards.length % columns;
+    if (remainder !== 0) {
+        // Add dummy cards to make the total number divisible by the number of columns
+        const cardsToAdd = columns - remainder;
+        for (let i = 0; i < cardsToAdd; i++) {
+            const dummyCard = document.createElement('div');
+            dummyCard.classList.add('card', 'dummy-card');
+            dummyCard.style.visibility = 'hidden'; // Hide dummy cards
+            document.querySelector('.game-container').appendChild(dummyCard);
+        }
+    }
+}
+
+// Assuming you have an array of cards or a way to fetch them
+const cards = document.querySelectorAll('.card');
+ensureSymmetricalCardCount(cards, 4);  // Assuming 4 columns
+
 
 // Function to animate the cards appearing with a domino effect
 function dominoAppear() {
@@ -186,19 +466,34 @@ function dominoAppear() {
 
 // Function to update the grid layout and card size based on the number of cards
 function updateGridAndCardSize(numCards) {
+    // Set the number of columns based on the total number of cards
     let columns;
+    let rows;
 
     if (numCards % 4 === 0) {
-        columns = Math.sqrt(numCards); // Ensure a square-like layout if possible
+        columns = Math.ceil(numCards / 4);
+        rows = 4;
     } else {
-        columns = Math.ceil(Math.sqrt(numCards));
+        columns = Math.ceil(numCards / 4);
+        rows = Math.ceil(numCards / columns);
     }
 
+    // Ensure that we always keep symmetry with an even number of columns and rows
+    if (columns % 2 !== 0) {
+        columns += 1; // Make sure the number of columns is even
+    }
+    
+    if (rows % 2 !== 0) {
+        rows += 1; // Make sure the number of rows is even
+    }
+
+    // Update the container's grid style
     cardContainer.style.gridTemplateColumns = `repeat(${columns}, 1fr)`;
+    cardContainer.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
 
     // Set a base width for the cards and adjust proportionally
-    const cardWidth = Math.min(150, 600 / columns); // Base card width
-    const cardHeight = cardWidth * 1.5; // Keep the 2:3 aspect ratio
+    const cardWidth = Math.min(120, 600 / columns); // Base card width, adjustable based on screen size
+    const cardHeight = cardWidth * 1.5; // Maintain a 2:3 aspect ratio
 
     document.querySelectorAll('.card').forEach(card => {
         card.style.width = `${cardWidth}px`;
@@ -206,17 +501,40 @@ function updateGridAndCardSize(numCards) {
     });
 }
 
+
+let isFlipping = false; // Prevent overlapping actions
+
 // Function to flip the card and check for a match
 function flipCard(card, value) {
-    if (flippedCards.length < 2 && !card.classList.contains('flipped') && card.style.visibility !== 'hidden') {
-        card.classList.add('flipped');
-        flippedCards.push({ card, value });
+    // Prevent card flipping if another flip action is being processed or if the card is already flipped
+    if (isFlipping || card.classList.contains('flipped') || card.style.visibility === 'hidden') {
+        return;
+    }
 
-        if (flippedCards.length === 2) {
-            setTimeout(checkMatch, 600);  // Slight delay to allow viewing the flip before checking match
-        }
+    // Set flipping state to true until this action completes
+    isFlipping = true;
+
+    // Play the card flip sound
+    flipCardSound.play();
+
+    // Flip the card and add it to the flipped cards array
+    card.classList.add('flipped');
+    flippedCards.push({ card, value });
+
+    // Check if two cards are flipped
+    if (flippedCards.length === 2) {
+        // Use a timeout to allow the user to see both cards before matching logic is executed
+        setTimeout(() => {
+            checkMatch();
+            // Reset the flipping state once matching logic completes
+            isFlipping = false;
+        }, 600);
+    } else {
+        // If only one card is flipped, reset the flipping state immediately
+        isFlipping = false;
     }
 }
+
 
 // Function to check if the flipped cards are a match
 function checkMatch() {
@@ -234,6 +552,8 @@ function checkMatch() {
                 if (level === maxLevels) {
                     setTimeout(showWinMessage, 1000);
                 } else {
+                    // Play level up sound before moving to the next level
+                    levelUpSound.play();
                     // Using Promises to wait for animation completion before proceeding
                     showLevelMessage(level + 1).then(() => {
                         nextLevel();
@@ -260,6 +580,7 @@ function checkMatch() {
     }
 }
 
+
 // Adjust the timer based on the level
 function adjustTimerByLevel() {
     if (level < maxLevels) {
@@ -280,10 +601,11 @@ function nextLevel() {
 // Function to display the win message when the game is completed
 function showWinMessage() {
     winMessage.innerText = `Congratulations, you are the memory king!`;
-    document.body.appendChild(winMessage);
+    appendMessageIfNeeded(winMessage); // Append if not already in the DOM
     gsap.to(winMessage, { duration: 1.5, scale: 1.2, ease: "bounce.out" });
     setTimeout(animateCards, 1500);
 }
+
 
 // Function to animate the cards like in Solitaire
 function animateCards() {
@@ -295,6 +617,10 @@ function animateCards() {
 
 // Function to display the question modal
 function askQuestion() {
+
+    // Play the question time sound
+    questionTimeSound.play();
+
     console.log('Showing question modal after 2 missed tries.');
     flippedCards.forEach(({ card }) => card.classList.remove('flipped'));
     flippedCards = [];
@@ -307,13 +633,27 @@ function askQuestion() {
 
 // Function to start the timer for answering the question
 function startTimer(seconds) {
+    // Clear any existing timer to avoid overlapping intervals
+    if (timer) {
+        clearInterval(timer);
+    }
+
     let timeLeft = seconds;
     timerDisplay.innerText = timeLeft;
+
+    // Change the timer display to default color initially
+    timerDisplay.style.color = ""; 
 
     timer = setInterval(() => {
         timeLeft--;
         timerDisplay.innerText = timeLeft;
 
+        // Change the timer color to red when time is running out
+        if (timeLeft <= 5) {
+            timerDisplay.style.color = "red";
+        }
+
+        // If time runs out, clear the timer and end the game
         if (timeLeft <= 0) {
             clearInterval(timer);
             gameOver();
@@ -321,8 +661,13 @@ function startTimer(seconds) {
     }, 1000);
 }
 
+
 // Function to reset the game after losing
 function gameOver() {
+
+    // Play the game over sound
+    gameOverSound.play();
+
     clearInterval(timer);
     questionPopup.classList.add('hidden');
     alert('Game Over! Try Again.');
@@ -373,10 +718,8 @@ function showLevelMessage(nextLevel) {
         levelMessage.innerText = `Welcome to Level ${nextLevel}!`;
         levelMessage.style.opacity = "1";  // Reset opacity to make sure it is visible
         
-        // Append the message to the body
-        if (!document.body.contains(levelMessage)) {
-            document.body.appendChild(levelMessage);
-        }
+        // Append the message to the body using the helper function
+        appendMessageIfNeeded(levelMessage);
 
         // Animate the level message
         gsap.to(levelMessage, { duration: 1.5, scale: 1.2, ease: "bounce.out" });
@@ -390,6 +733,8 @@ function showLevelMessage(nextLevel) {
         }, 1500);  // Delay before fading out the message
     });
 }
+
+
 
 // Start the game with the first level (8 cards)
 setupLevel();
