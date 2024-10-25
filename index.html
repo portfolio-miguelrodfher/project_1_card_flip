@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Card Flip Game</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.0/gsap.min.js"></script>
+</head>
+
+<body>
+    <div class="game-container"></div>
+
+    <!-- Modal for question -->
+    <div class="modal hidden" id="question-popup">
+        <div class="modal-content">
+            <p id="question-text"></p>
+            <div class="options">
+                <button class="option-btn" id="option-1">Option 1</button>
+                <button class="option-btn" id="option-2">Option 2</button>
+                <button class="option-btn" id="option-3">Option 3</button>
+            </div>
+            <p id="timer">Time left: <span id="time-left">10</span></p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
