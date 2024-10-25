@@ -52,7 +52,16 @@ body {
 .card-back {
     background-color: #4CAF50;
     transform: rotateY(180deg);
+    background-size: cover;   /* Ensure the image covers the entire area */
+    background-position: center;  /* Center the image */
+    background-repeat: no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;   /* Hide any overflow */
 }
+
+
 
 .flipped .card-front {
     transform: rotateY(180deg);
@@ -69,16 +78,17 @@ body {
     left: 50%;
     transform: translate(-50%, -50%);
     background-color: white;
-    padding: 20px;
+    padding: 30px;
     box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-    border-radius: 10px;
+    border-radius: 15px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 300px;
-    height: 250px;
+    width: 400px;
+    height: 300px;
     z-index: 9999;
+    font-size: 20px;
 }
 
 .hidden {
@@ -89,24 +99,25 @@ body {
     display: flex;
     justify-content: space-around;
     width: 100%;
-    margin-top: 10px;
+    margin-top: 20px;
+    gap: 10px;
 }
 
 .option-btn {
     background-color: #2196F3;
     color: white;
     border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
-    font-size: 16px;
+    border-radius: 10px;
+    padding: 15px 25px;
+    font-size: 20px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
 .option-btn:hover {
     background-color: #1976D2;
+    transform: scale(1.1);
 }
-
 
 .level-message {
     position: fixed;
@@ -115,20 +126,16 @@ body {
     transform: translate(-50%, -50%);
     background-color: rgba(0, 0, 0, 0.7);
     color: white;
-    padding: 20px;
-    font-size: 24px;
-    border-radius: 10px;
+    padding: 30px;
+    font-size: 28px;
+    border-radius: 15px;
     opacity: 1;
     z-index: 9999;
     scale: 0.8;
 }
 
-
 #timer {
-    margin-top: 15px;
+    margin-top: 20px;
     font-weight: bold;
+    font-size: 18px;
 }
-/* The code above this line is the base code that actually works as intended */
-
-
-

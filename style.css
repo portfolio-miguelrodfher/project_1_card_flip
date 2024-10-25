@@ -1,3 +1,4 @@
+/* General styles */
 * {
     margin: 0;
     padding: 0;
@@ -10,11 +11,112 @@ body {
     align-items: center;
     height: 100vh;
     background-color: #f0f0f0;
-    flex-direction: column;
+    overflow: hidden; /* Prevent scrolling */
 }
 
-.game-container {
+/* Background tiles */
+.background-tiles {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
     display: grid;
+    z-index: 1; /* Behind all other content */
+    pointer-events: none; /* Prevent interaction */
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); /* Responsive grid */
+}
+
+/* Tile styles */
+.tile {
+    width: 100%;
+    height: 100%;
+    perspective: 1000px; /* Perspective for 3D effect */
+}
+
+.tile-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 1s ease; /* Smooth flip transition */
+}
+
+.tile-front, .tile-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+}
+
+.tile-front {
+    background-color: #4CAF50; /* Example front color */
+}
+
+.tile-back {
+    background-color: #ffc107; /* Example back color */
+    transform: rotateY(180deg); /* The back face flipped by default */
+}
+
+/* Semi-transparent overlay to enhance text visibility */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.4); /* Semi-transparent overlay */
+    z-index: 2; /* Above background tiles but below text */
+}
+
+/* Darker overlay specifically for text area */
+.intro-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.6); /* Darker overlay */
+    padding: 20px;
+    border-radius: 20px;
+    z-index: 3; /* Above overlay and tiles */
+}
+
+/* Intro Screen */
+.intro-screen {
+    background: none;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Fredoka One', sans-serif; /* Apply the fun font */
+}
+
+.intro-screen h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+}
+
+#start-button {
+    background-color: #ffc107; /* Yellow color to make it pop */
+    color: black;
+    border: none;
+    padding: 15px 30px;
+    font-size: 20px;
+    cursor: pointer;
+    border-radius: 10px;
+    transition: background-color 0.3s ease;
+}
+
+#start-button:hover {
+    background-color: #e0a806;
+}
+
+/* Game container for the cards - HIDE by default */
+.game-container {
+    display: none; /* Hidden initially */
     grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
     gap: 15px;
     width: 100%;
@@ -22,6 +124,7 @@ body {
     margin-top: 20px;
 }
 
+/* Cards for the game */
 .card {
     width: 100%;
     height: 0;
@@ -52,16 +155,11 @@ body {
 .card-back {
     background-color: #4CAF50;
     transform: rotateY(180deg);
-    background-size: cover;   /* Ensure the image covers the entire area */
-    background-position: center;  /* Center the image */
+    background-size: cover; /* Ensure the image covers the entire area */
+    background-position: center; /* Center the image */
     background-repeat: no-repeat;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;   /* Hide any overflow */
+    overflow: hidden; /* Hide any overflow */
 }
-
-
 
 .flipped .card-front {
     transform: rotateY(180deg);

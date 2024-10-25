@@ -1,4 +1,4 @@
-// Grab elements from the document
+
 const cardContainer = document.querySelector('.game-container');
 const questionPopup = document.getElementById('question-popup');
 const questionText = document.getElementById('question-text');
@@ -8,11 +8,6 @@ const levelMessage = document.createElement('div'); // To show level message
 levelMessage.classList.add('level-message');
 const winMessage = document.createElement('div');   // To show the win message
 winMessage.classList.add('level-message');
-const startButton = document.getElementById('start-button');
-const introScreen = document.getElementById('intro-screen');
-const introContainer = document.querySelector('.intro-container');
-const tileContainer = document.querySelector('.background-tiles');
-const overlay = document.querySelector('.overlay');
 
 let flippedCards = [];
 let missedTries = 0;  // Keep track of missed tries
@@ -24,104 +19,6 @@ let maxLevels = 15; // Total number of levels until the screen is fully covered
 
 // Predefine the number of cards for each level to ensure symmetry
 const levelCardCounts = [8, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60, 64];
-
-// Function to create a grid of tiles and animate them
-function createTileGrid() {
-    const tileCountX = Math.floor(window.innerWidth / 100); // Number of tiles horizontally
-    const tileCountY = Math.floor(window.innerHeight / 100); // Number of tiles vertically
-    const totalTiles = tileCountX * tileCountY;
-
-    tileContainer.style.gridTemplateColumns = `repeat(${tileCountX}, 1fr)`; // Define the grid layout
-
-    for (let i = 0; i < totalTiles; i++) {
-        const tile = document.createElement('div');
-        tile.classList.add('tile');
-
-        // Create the flipping animation using two sides
-        tile.innerHTML = `
-            <div class="tile-inner">
-                <div class="tile-front"></div>
-                <div class="tile-back"></div>
-            </div>
-        `;
-        tileContainer.appendChild(tile);
-    }
-
-    // Animate the tiles using GSAP to create a constant rhythmic flip
-    const allTiles = document.querySelectorAll('.tile-inner');
-    gsap.set(allTiles, { rotationY: 0 }); // Set initial rotation to zero
-
-    // Animate each tile to flip continuously in a staggered pattern
-    allTiles.forEach((tile, index) => {
-        gsap.to(tile, {
-            rotationY: 180,
-            duration: 3,
-            ease: "power1.inOut",
-            repeat: -1,
-            yoyo: true,
-            delay: index * 0.1, // Staggering the start time for each tile to create a wave effect
-        });
-    });
-}
-
-// Call the function to generate the tile grid when the page loads
-window.addEventListener('load', createTileGrid);
-
-// GSAP Animation for the Intro Screen
-window.addEventListener('load', () => {
-    gsap.from(".intro-screen h1", {
-        duration: 1.5,
-        y: -100,
-        opacity: 0,
-        ease: "bounce.out"
-    });
-
-    gsap.from("#start-button", {
-        duration: 1.2,
-        scale: 0,
-        ease: "back.out(1.7)",
-        delay: 0.5
-    });
-});
-
-// Dancing animation for each letter in the title
-const title = document.querySelector('.intro-screen h1');
-const titleText = title.innerText;
-title.innerHTML = ''; // Clear the original text
-
-titleText.split('').forEach(letter => {
-    const span = document.createElement('span');
-    span.innerText = letter === ' ' ? '\u00A0' : letter; // Preserve spaces
-    title.appendChild(span);
-});
-
-// GSAP Dancing Animation for each letter
-gsap.from(".intro-screen h1 span", {
-    duration: 1,
-    y: 100,
-    opacity: 0,
-    stagger: 0.05, // Delay between each letter animation
-    ease: "elastic.out(1, 0.3)",
-    rotation: 360,
-    repeat: -1,
-    yoyo: true,
-    delay: 0.5
-});
-
-// Start Button click event - start the game
-startButton.addEventListener('click', startGame);
-
-function startGame() {
-    // Hide the intro screen, overlays, and tile background
-    introContainer.style.display = 'none';
-    introScreen.style.display = 'none';
-    overlay.style.display = 'none';
-    tileContainer.style.display = 'none';
-
-    // Display the game container and start the first level
-    cardContainer.style.display = 'grid';
-    setupLevel();
-}
 
 // Function to set up the current level with a specified number of cards
 function setupLevel() {
